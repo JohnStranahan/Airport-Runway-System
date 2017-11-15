@@ -1,13 +1,20 @@
 
-public class Runway 
+public class Runway
 {
 	String runwayName;
 	
-	ListReferenceBasedGeneric<Plane> runway = new ListReferenceBasedGeneric<Plane>();
+	ListReferenceBasedGeneric<Plane> listOfPlanes = new ListReferenceBasedGeneric<Plane>();
 	
 	public Runway(String runwayName)
 	{
 		this.runwayName = runwayName;
+	}
+	
+	public void Runway(String flightNumber, String destination, String runway)
+	{
+		Plane newPlane = new Plane(flightNumber, destination, runway);
+		
+		listOfPlanes.add(0, newPlane);
 	}
 	
 	public void setRunwayName(String runwayName)
@@ -20,8 +27,5 @@ public class Runway
 		return runwayName;
 	}
 	
-	public String toString()
-	{
-		return runwayName;
-	}
+	
 } // END CLASS Runway{}

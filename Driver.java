@@ -10,34 +10,13 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		int userSelection = -1;
 		int numberOfRunways = 0;
 		
-		// Declare any data structures under here
-		/*ListReferenceBasedGeneric<ListReferenceBasedGeneric<Runway>> airport = new ListReferenceBasedGeneric<>();
-		
-		airport.add(0, new ListReferenceBasedGeneric<Runway>());
-		
-		System.out.println(airport.get(0));
-		
-		airport.get(0).add(0,  new Runway("NorthWest"));
-		
-		
-		ListReferenceBasedGeneric<Runway> airport1 = new ListReferenceBasedGeneric<Runway>();
-		
-		airport1.add(0, new Runway("NorthWest"));
-		
-		// Northwest --> add plane airfrance 102 to runway
-		airport1.get(0).addPlane(new Plane("AirFrance102", "London", "NorthWest"));
-		
-		System.out.println(airport1.get(0).getRunwayName());
-		*/
-		
-		ListReferenceBasedGeneric<Plane> airport = new ListReferenceBasedGeneric<Plane>();
-		
-		
+		ListReferenceBasedGeneric<Runway> runwayList = new ListReferenceBasedGeneric<Runway>();
 		
 		System.out.println("Welcome to the Airport program!");
 		System.out.print("Enter the number of runways: ");
 		numberOfRunways = Integer.parseInt(stdin.readLine().trim());
 		System.out.println(numberOfRunways);
+		
 		
 		/**
 		 * Input the runway names, and make sure that they
@@ -46,11 +25,18 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		for(int i = 0; i < numberOfRunways; i++)
 		{
 			String runwayName = "";
+			int searchResult = 0;
 			
-			System.out.print("\tEnter the name of runway number: " + (i + 1) + ": ");
+			System.out.print("Enter the name of runway number: " + (i + 1) + ": ");
 			runwayName = stdin.readLine().trim();
 			System.out.println(runwayName);
 			
+			searchResult = binarySearch(runwayName, runwayList, "r");
+			
+			while(searchResult < 0)
+			{
+				System.out.println("");
+			}
 			
 		} // END FOR
 		
@@ -116,7 +102,6 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 				}
 				case 8: // 
 				{
-					
 					break;
 				}
 				case 9: // Exit the program
@@ -133,9 +118,84 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		} // END WHILE
 	} // END main() method
 	
-	
-	private int binarySearch()
+	public static void addPlane(ListReferenceBasedGeneric<Runway> runwayList) throws IOException
 	{
-		return 1;
+		/**
+		 * Get the input --> flight number, destination, and runway
+		 * 
+		 * Add by runway
+		 * 
+		 * use the binary search method to 
+		 */
+		
+		
+		
+		runwayList.get(0).addPlane(flightNumber, destination, runway);
+	}
+	
+	private static int binarySearch(String item, ListReferenceBasedGeneric<Runway> runwayList, String searchFor)
+	{
+		int low = 0;
+		int high = runwayList.size();
+		int mid = 0;
+		
+		switch(searchFor)
+		{
+			case "r":
+			{
+				while(low <= high)
+				{
+					mid = (low + high) / 2;
+					
+					if(runwayList.get(mid).getRunwayName().compareToIgnoreCase(item) == 0)
+					{
+						return mid;
+					}
+					else if(runwayList.get(mid).getRunwayName().compareToIgnoreCase(item) < 0)
+					{
+						low = mid + 1;
+					}
+					else
+					{
+						high = mid - 1;
+					}
+				}
+				
+				// Nothing was found
+				return -1;
+			}
+			case "f":
+			{
+				while(low <= high)
+				{
+					mid = (low + high) / 2;
+					
+					if(runwayList.get(mid).get().compareToIgnoreCase(item) == 0)
+					{
+						return mid;
+					}
+					else if(runwayList.get(mid).getRunwayName().compareToIgnoreCase(item) < 0)
+					{
+						low = mid + 1;
+					}
+					else
+					{
+						high = mid - 1;
+					}
+				}
+				
+				// Nothing was found
+				return -1;
+			}
+			case "d":
+			{
+				
+			}
+			default:
+			{
+				System.out.println("\tError searching");
+				return -1;
+			}
+		}
 	}
 } // END CLASS Driver {}
