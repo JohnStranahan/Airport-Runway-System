@@ -10,7 +10,7 @@ public class Runway
 		this.runwayName = runwayName;
 	}
 	
-	public void Runway(String flightNumber, String destination, String runway)
+	public void addPlane(String flightNumber, String destination, String runway)
 	{
 		Plane newPlane = new Plane(flightNumber, destination, runway);
 		
@@ -27,5 +27,8 @@ public class Runway
 		return runwayName;
 	}
 	
-	
+	public ListReferenceBasedGeneric<Plane> getListOfPlanes()
+	{
+		return listOfPlanes;
+	}
 } // END CLASS Runway{}
