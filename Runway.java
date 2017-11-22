@@ -1,9 +1,8 @@
-
 public class Runway
 {
 	String runwayName;
 	
-	ListReferenceBasedGeneric<Plane> listOfPlanes = new ListReferenceBasedGeneric<Plane>();
+	ListArrayBasedGeneric<Plane> arrayOfPlanes = new ListArrayBasedGeneric<Plane>();
 	
 	public Runway(String runwayName)
 	{
@@ -12,23 +11,41 @@ public class Runway
 	
 	public void addPlane(String flightNumber, String destination, String runway)
 	{
+		int size = arrayOfPlanes.size();
+		
 		Plane newPlane = new Plane(flightNumber, destination, runway);
 		
-		listOfPlanes.add(0, newPlane);
+		arrayOfPlanes.add(size, newPlane);
+	} // END addPlane() method
+	
+	public String launchPlane()
+	{
+		String flightNumber = arrayOfPlanes.get(0).getFlightNumber();
+		
+		// Remove the 1st flight
+		arrayOfPlanes.remove(0);
+		
+		return flightNumber;
+	} // END launchPlane() method
+	
+	public ListArrayBasedGeneric<Plane> getListOfPlanes()
+	{
+		return arrayOfPlanes;
 	}
 	
 	public void setRunwayName(String runwayName)
 	{
 		this.runwayName = runwayName;
-	}
+	} // END setRunwayName() method
 	
 	public String getRunwayName()
 	{
 		return runwayName;
-	}
-	
-	public ListReferenceBasedGeneric<Plane> getListOfPlanes()
+	} // 
+
+	@Override
+	public String toString() 
 	{
-		return listOfPlanes;
+		return "Runway [runwayName=" + runwayName + ", arrayOfPlanes=" + arrayOfPlanes + "]\n";
 	}
 } // END CLASS Runway{}
