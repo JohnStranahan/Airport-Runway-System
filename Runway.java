@@ -15,6 +15,12 @@ public class Runway
 		
 		Plane newPlane = new Plane(flightNumber, destination, runway);
 		
+		/**
+		 * Will add it in the last index
+		 * Plane1
+		 * Plane2
+		 * Plane3 and so on
+		 */
 		arrayOfPlanes.add(size, newPlane);
 	} // END addPlane() method
 	

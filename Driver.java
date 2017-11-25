@@ -10,6 +10,13 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		int userSelection = -1;
 		int numberOfRunways = 0;
 		
+		/**
+		 * *&^#*^$%)(*&#^$)(*#&$(*) EXPERIMENTAL!!!!!
+		 * SEEING IF THIS WORKS FOR THE NUMBER OF TAKE OFFS AND KEEPING
+		 * TRACK OF THE TAKE OFF ORDER BECAUSE Integer IS A OBJECT
+		 */
+		Integer flightTakeOffCounter = 0;
+		
 		ListArrayBasedGeneric<Runway> runwayList = new ListArrayBasedGeneric<Runway>();
 		
 		// Add the purgatory/pool
@@ -44,7 +51,7 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			{
 				System.out.println();
 				
-				System.out.println("Invalid runway name, please enter another one: ");
+				System.out.print("\tInvalid runway name, please enter another runway name: ");
 				
 				runwayName = stdin.readLine().trim();
 				
@@ -55,35 +62,20 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 				System.out.println(searchResult);
 			}
 			
-			// Add the new runway			
+			/**
+			 * Add the new runway one after another like so:
+			 * Purgatory -- Always first
+			 * A
+			 * B
+			 * C
+			 * ...
+			 */
 			runwayList.add(i + 1, new Runway(runwayName));
 			
-			System.out.println(runwayList.toString());
+			//System.out.println(runwayList.toString());
 			
 		} // END FOR
-		
-		for(int i = 1; i <= numberOfRunways; i++) // Start at 1, to skip Purgatory printing
-		System.out.print(runwayList.get(i).toString());
-		
-		/*runwayList.get(1).getListOfPlanes().get(1).setDestination("London");
-		
-		runwayList.get(3).addPlane("123", "london", "south");*/
-		
-		runwayList.get(1).addPlane("FranceAir133", "London", "SouthWest");
-		runwayList.get(1).addPlane("United223", "London", "SouthWest");
-		runwayList.get(1).addPlane("American334", "London", "SouthWest");
-		
-		System.out.println("\nPrinting out plane");
-		System.out.println(runwayList.get(1).toString());
-		
-		System.out.println("\nLaunching plane 1");
-		// Store plane that is to be launched so we can display which plane was launched
-		//runwayList.get(1).launchPlane();
-		
-		System.out.println(runwayList.get(1).launchPlane() + " has now taken off from runway " + runwayList.get(1).getRunwayName());
-		
-		System.out.println("\n" + runwayList.get(1).toString());
-		
+				
 		while(userSelection != 9) 
 		{
 			System.out.println("Select from the following menu:");
@@ -108,7 +100,8 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			switch(userSelection)
 			{
 				case 1: // 
-				{	
+				{
+					addPlane(runwayList);
 					break;
 				}
 				case 2: // 
@@ -128,11 +121,13 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 					break;
 				}
 				case 6: // 
-				{	
+				{
+					displayInfoForTakeOff(runwayList);
 					break;
 				}
 				case 7: // 
 				{
+					displayInfoForReEntry(runwayList);
 					break;
 				}
 				case 8: // 
@@ -153,14 +148,15 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		} // END WHILE
 	} // END main() method
 	
-	public static void addPlane(ListReferenceBasedGeneric<Runway> runwayList) throws IOException
+	public static void addPlane(ListArrayBasedGeneric<Runway> runwayList) throws IOException
 	{
 		/**
-		 * Get the input --> flight number, destination, and runway
+		 * Get the input --> flight number, destination, and run way
 		 * 
-		 * Add by runway
+		 * Add by run way
 		 * 
-		 * use the binary search method to 
+		 * use the search method to see if there are duplicates for the run way
+		 * name (which we want), and none for the flight number (uniqueness)
 		 */
 		String flightNumber = "", destination = "", runway = "";
 		
@@ -171,8 +167,9 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		System.out.println(flightNumber);
 		
 		//searchReturn = binarySearch(flightNumber, runwayList, "f");
+		searchReturn = search(flightNumber, runwayList, "f");
 		
-		while(searchReturn > 0)
+		while(searchReturn >= 0)
 		{
 			System.out.println("\tInvalid flight number. Please re-enter the flight number: ");
 			
@@ -180,7 +177,7 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			
 			System.out.println(flightNumber);
 			
-			//searchReturn = binarySearch(flightNumber, runwayList, "f");
+			searchReturn = search(flightNumber, runwayList, "f");
 		}
 		
 		System.out.print("\tEnter the destination: ");
@@ -191,17 +188,17 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		runway = stdin.readLine().trim();
 		System.out.println(runway);
 		
-		//searchReturn = binarySearch(runway, runwayList, "r");
+		searchReturn = search(runway, runwayList, "r");
 		
-		while(searchReturn > 0)
+		while(searchReturn < 0) // If the run way was not found, then re prompt
 		{
-			System.out.println("\tInvalid runway. Please re-enter the runway: ");
+			System.out.print("\tInvalid runway. Please re-enter the runway: ");
 			
 			runway = stdin.readLine().trim();
 			
 			System.out.println(runway);
 			
-			//searchReturn = binarySearch(runway, runwayList, "r");
+			searchReturn = search(runway, runwayList, "r");
 		}
 		
 		/**
@@ -210,24 +207,74 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		 */
 		runwayList.get(searchReturn).addPlane(flightNumber, destination, runway);
 		
+		System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + runway);
+		
 		System.out.println();
 	}
 	
-	public static void addPlane()
+	public static void launch(ListArrayBasedGeneric<Runway> runwayList, Integer flightTakeOffCounter)
 	{
-		// If yes, add it to the specfic runway
 		
-		// If no, add it to runwayList.get(0) ---> Purgatory
 	}
 	
-	public static void displayInfoAboutTakeOffWait(ListArrayBasedGeneric<Runway> runwayList) // Option # 6
+	public static void displayInfoForTakeOff(ListArrayBasedGeneric<Runway> runwayList) // Option # 6
 	{
+		int size = runwayList.size();
+		int sizeOfRunway = 0;
+		String runwayName = "", flightNumber = "", destination = "";
 		
+		for(int i = 1; i < size; i++) // We want to display all run ways, except Purgatory
+		{
+			// Get the run way name and the size of that run way
+			sizeOfRunway = runwayList.get(i).getListOfPlanes().size();
+			runwayName = runwayList.get(i).getRunwayName();
+			
+			
+			if(sizeOfRunway > 0) // If the runway has planes on it, display them
+			{
+				System.out.println("\tThese planes are waiting for takeoff on runway " + runwayName);
+				
+				for(int j = 0; j < sizeOfRunway; j++) // Go through the runway and print out planes and their destination
+				{
+					flightNumber = runwayList.get(i).getListOfPlanes().get(j).getFlightNumber();
+					destination = runwayList.get(i).getListOfPlanes().get(j).getDestination();
+					
+					System.out.println("\t\tFlight " + flightNumber + " to " + destination);
+				}
+			}
+			else // Else, display that no planes are waiting for take off
+			{
+				System.out.println("\tNo planes are waiting for takeoff on runway " + runwayName + "!");
+			}
+		}
+		
+		System.out.println();
 	} // END displayInfoAboutTakeOffWait() method
 	
-	public static void displayInfoAboutReEntry() // Option # 7
+	public static void displayInfoForReEntry(ListArrayBasedGeneric<Runway> runwayList) // Option # 7
 	{
+		// We are only printing out the contents of Purgatory
+		int sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
+		String flightNumber = "", destination = "";
 		
+		if(sizeOfPurgatory > 0)
+		{
+			System.out.println("\tThese planes are waiting to be cleared to re-enter a runway:");
+			
+			for(int i = 0; i < sizeOfPurgatory; i++)
+			{
+				flightNumber = runwayList.get(0).getListOfPlanes().get(i).getFlightNumber();
+				destination = runwayList.get(0).getListOfPlanes().get(i).getDestination();
+				
+				System.out.println("\t\tFlight " + flightNumber + " to " + destination);
+			}
+		}
+		else
+		{
+			System.out.println("\tNo planes are waiting to be cleared to re-enter a runway!");
+		}
+		
+		System.out.println();
 	}
 	
 	private static int search(String item, ListArrayBasedGeneric<Runway> runwayList, String option)
