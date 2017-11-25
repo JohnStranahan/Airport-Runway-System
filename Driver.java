@@ -36,7 +36,7 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			System.out.println(runwayName);
 			
 			// NEED TO CHECK FOR DUPLICATES
-			searchResult = binarySearch(runwayName, runwayList, "r");
+			searchResult = search(runwayName, runwayList, "r");
 			
 			System.out.println(searchResult);
 			
@@ -50,12 +50,12 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 				
 				System.out.println(runwayName);
 				
-				searchResult = binarySearch(runwayName, runwayList, "r");
+				searchResult = search(runwayName, runwayList, "r");
 				
 				System.out.println(searchResult);
 			}
 			
-			// Add the new runway
+			// Add the new runway			
 			runwayList.add(i + 1, new Runway(runwayName));
 			
 			System.out.println(runwayList.toString());
@@ -108,38 +108,31 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			switch(userSelection)
 			{
 				case 1: // 
-				{
-					
+				{	
 					break;
 				}
 				case 2: // 
-				{
-					
+				{	
 					break;
 				}
 				case 3: // 
-				{
-					
+				{	
 					break;
 				}
 				case 4: // 
-				{
-					
+				{	
 					break;
 				}
 				case 5: // 
-				{
-					
+				{	
 					break;
 				}
 				case 6: // 
-				{
-					
+				{	
 					break;
 				}
 				case 7: // 
 				{
-					
 					break;
 				}
 				case 8: // 
@@ -237,6 +230,56 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		
 	}
 	
+	private static int search(String item, ListArrayBasedGeneric<Runway> runwayList, String option)
+	{
+		int size = runwayList.size();
+		int sizeOfRunway = 0;
+		String itemFromList = "";
+		
+		switch(option)
+		{
+			case "r":
+			{
+				for(int i = 0; i < size; i++)
+				{
+					itemFromList = runwayList.get(i).getRunwayName();
+					
+					if(itemFromList.compareToIgnoreCase(item) == 0)
+					{
+						return i;
+					}
+				}
+				
+				return -1;
+			}
+			case "f":
+			{
+				for(int i = 0; i < size; i++)
+				{
+					sizeOfRunway = runwayList.get(i).getListOfPlanes().size();
+					
+					for(int j = 0; j < sizeOfRunway; j++)
+					{
+						itemFromList = runwayList.get(i).getListOfPlanes().get(j).getFlightNumber();
+						
+						if(itemFromList.compareToIgnoreCase(item) == 0)
+						{
+							return i;
+						}
+					}
+				}
+				
+				return -1;
+			}
+			default:
+			{
+				System.out.println("Cannot do anything");
+			}
+		}
+		
+		return 1;
+	}
+	
 	private static int binarySearch(String item, ListArrayBasedGeneric<Runway> runwayList, String option)
 	{
 		int high = runwayList.size() - 1;
@@ -278,7 +321,7 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 					{
 						mid = low + high / 2;
 						
-						if(runwayList.get(i).getListOfPlanes().get(mid).getFlightNumber().compareToIgnoreCase(item) == 0)
+						if(runwayList.get(i).getListOfPlanes().get(mid).getFlightNumber().compareToIgnoreCase(item) < 0)
 						{
 							low = mid + 1;
 						}
@@ -297,7 +340,7 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			}
 			default:
 			{
-				System.out.println("You suck dick");
+				System.out.println("Invalid option");
 			}
 		}
 		
