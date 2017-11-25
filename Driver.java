@@ -14,8 +14,11 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		 * *&^#*^$%)(*&#^$)(*#&$(*) EXPERIMENTAL!!!!!
 		 * SEEING IF THIS WORKS FOR THE NUMBER OF TAKE OFFS AND KEEPING
 		 * TRACK OF THE TAKE OFF ORDER BECAUSE Integer IS A OBJECT
+		 * 
+		 * launchOrder is 1 because we want to start off at the run way 
+		 * AFTER Purgatory
 		 */
-		Integer flightTakeOffCounter = 0;
+		Integer flightTakeOffCounter = 0, launchOrder = 1;
 		
 		ListArrayBasedGeneric<Runway> runwayList = new ListArrayBasedGeneric<Runway>();
 		
@@ -106,6 +109,8 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 				}
 				case 2: // 
 				{	
+					launch(runwayList, flightTakeOffCounter, launchOrder);
+					System.out.println("\n\nLAUNCH ORDER: " + launchOrder); // NOT INCREMENTING LIKE IT SHOULD!
 					break;
 				}
 				case 3: // 
@@ -212,9 +217,75 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		System.out.println();
 	}
 	
-	public static void launch(ListArrayBasedGeneric<Runway> runwayList, Integer flightTakeOffCounter)
+	/**
+	 * NOT WORKING
+	 * NOT WORKING
+	 * NOT WORKING
+	 * NOT WORKING
+	 * NOT WORKING
+	 * NOT WORKING
+	 * NOT WORKING
+	 * NOT WORKING
+	 * 
+	 * @param runwayList
+	 * @param flightTakeOffCounter
+	 * @param launchOrder
+	 * @throws IOException
+	 */
+	public static void launch(ListArrayBasedGeneric<Runway> runwayList, Integer flightTakeOffCounter, Integer launchOrder) throws IOException
 	{
+		int size = runwayList.size();
+		int sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
+		int sizeOfRunway = 0;
+		String flightNumber = "";
+		char userInput = '@';
 		
+		/**
+		 * We want launchOrder to start AFTER purgatory
+		 * but we don't want to go out of bounds
+		 */
+		if(launchOrder >= 1 && launchOrder < size)
+		{
+			sizeOfRunway = runwayList.get(launchOrder).getListOfPlanes().size();
+			
+			if(sizeOfRunway > 0) // Launch the first put in plane
+			{
+				// Get the flight number
+				flightNumber = runwayList.get(launchOrder).getListOfPlanes().get(0).getFlightNumber();
+				
+				System.out.print("\tIs flight " + flightNumber + " cleared for takeoff (Y/N): ");
+				userInput = stdin.readLine().trim().charAt(0);
+				System.out.println(userInput);
+				
+				if(userInput == 'Y' || userInput == 'y') // Take off, increment the launchOrder
+				{
+					runwayList.get(launchOrder).takeOff();
+					flightTakeOffCounter++;
+					launchOrder++;
+				}
+				else // Put it in purgatory, and increment launchOrder
+				{
+					/**
+					 * Use the removeFromRunway() method which returns the element that was removed, and adds
+					 * it to the purgatory list
+					 */
+					runwayList.get(0).getListOfPlanes().add(sizeOfPurgatory, runwayList.get(launchOrder).removeFromRunway());
+					System.out.println("\tFlight " + flightNumber + " is now waiting to re-enter a runway");
+					launchOrder++;
+				}
+			}
+			else // No planes on the runway, increment the launch order to the next runway
+			{
+				System.out.println("\tThere are no planes on the runway");
+				launchOrder++;
+			}
+		}
+		else // If the launchOrder has reached the end, start at 1 again, in a circular fashion
+		{
+			launchOrder = 1;
+		}
+		
+		System.out.println();
 	}
 	
 	public static void displayInfoForTakeOff(ListArrayBasedGeneric<Runway> runwayList) // Option # 6
@@ -327,6 +398,21 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		return 1;
 	}
 	
+	/**
+	 * NOT USED
+	 * NOT USED
+	 * NOT USED
+	 * NOT USED
+	 * NOT USED
+	 * NOT USED
+	 * NOT USED
+	 * NOT USED
+	 * 
+	 * @param item
+	 * @param runwayList
+	 * @param option
+	 * @return
+	 */
 	private static int binarySearch(String item, ListArrayBasedGeneric<Runway> runwayList, String option)
 	{
 		int high = runwayList.size() - 1;

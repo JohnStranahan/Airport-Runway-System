@@ -24,6 +24,13 @@ public class Runway
 		arrayOfPlanes.add(size, newPlane);
 	} // END addPlane() method
 	
+	/**
+	 * NO NEED TO RETURN ANYTHING!!!!! BECAUSE THE LOGIC IS WRONG!
+	 * NEED TO CONFIRM LAUNCH BEFORE LAUNCH CAN OCCUR SO WE NEED
+	 * TO GET THE FLIGHNUMBER BEFORE CALLING THIS METHOD AND
+	 * RETURNING THE FLIGHTNUMBER WOULD BE REDUNDANT
+	 * @return
+	 */
 	public String launchPlane()
 	{
 		String flightNumber = arrayOfPlanes.get(0).getFlightNumber();
@@ -33,6 +40,26 @@ public class Runway
 		
 		return flightNumber;
 	} // END launchPlane() method
+	
+	/**
+	 * Just removes the element from the 0th index
+	 */
+	public void takeOff()
+	{
+		arrayOfPlanes.remove(0);
+	}
+	
+	/**
+	 * Returns the element that was removed -- For adding it to purgatory
+	 */
+	public Plane removeFromRunway()
+	{
+		Plane temp = arrayOfPlanes.get(0);
+		
+		arrayOfPlanes.remove(0);
+		
+		return temp;
+	}
 	
 	public ListArrayBasedGeneric<Plane> getListOfPlanes()
 	{
@@ -47,7 +74,7 @@ public class Runway
 	public String getRunwayName()
 	{
 		return runwayName;
-	} // 
+	}
 
 	@Override
 	public String toString() 
