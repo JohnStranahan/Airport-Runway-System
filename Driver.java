@@ -262,6 +262,7 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 					runwayList.get(launchOrder).takeOff();
 					flightTakeOffCounter++;
 					launchOrder++;
+					Integer.sum(launchOrder, 1);
 				}
 				else // Put it in purgatory, and increment launchOrder
 				{
