@@ -3,35 +3,27 @@ import java.io.*;
 
 public class Driver 
 {
-static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+	static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+	private static int launchOrder = 1; // We want launch to occur AFTER Purgatory
+	private static int flightTakeOffCounter = 0;
 	
 	public static void main(String [] args) throws IOException
 	{
 		int userSelection = -1;
 		int numberOfRunways = 0;
-		
-		/**
-		 * *&^#*^$%)(*&#^$)(*#&$(*) EXPERIMENTAL!!!!!
-		 * SEEING IF THIS WORKS FOR THE NUMBER OF TAKE OFFS AND KEEPING
-		 * TRACK OF THE TAKE OFF ORDER BECAUSE Integer IS A OBJECT
-		 * 
-		 * launchOrder is 1 because we want to start off at the run way 
-		 * AFTER Purgatory
-		 */
-		Integer flightTakeOffCounter = 0, launchOrder = 1;
-		
+
 		ListArrayBasedGeneric<Runway> runwayList = new ListArrayBasedGeneric<Runway>();
-		
-		// Add the purgatory/pool
-		
+		AOSLArrayBased listOfPlanes = new AOSLArrayBased();
+
+		// Add the purgatory element		
 		runwayList.add(0, new Runway("Purgatory"));
-		
+
 		System.out.println("Welcome to the Airport program!");
 		System.out.print("Enter the number of runways: ");
 		numberOfRunways = Integer.parseInt(stdin.readLine().trim());
 		System.out.println(numberOfRunways);
-		
-		
+
+
 		/**
 		 * Input the runway names, and make sure that they
 		 * are not duplicated
@@ -40,31 +32,33 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		{
 			String runwayName = "";
 			int searchResult = 0;
-			
+
 			System.out.print("Enter the name of runway number: " + (i + 1) + ": ");
 			runwayName = stdin.readLine().trim();
 			System.out.println(runwayName);
-			
+
 			// NEED TO CHECK FOR DUPLICATES
 			searchResult = search(runwayName, runwayList, "r");
-			
-			System.out.println(searchResult);
-			
+
+
 			while(searchResult >= 0) // If Purgatory is entered or any other invalid name is entered
 			{
 				System.out.println();
-				
+
 				System.out.print("\tInvalid runway name, please enter another runway name: ");
-				
+
 				runwayName = stdin.readLine().trim();
-				
+
 				System.out.println(runwayName);
-				
+
 				searchResult = search(runwayName, runwayList, "r");
-				
-				System.out.println(searchResult);
 			}
-			
+
+			if(searchResult < 0)
+			{
+				System.out.println("\tRunway " + runwayName + " added successfully\n");
+			}
+
 			/**
 			 * Add the new runway one after another like so:
 			 * Purgatory -- Always first
@@ -74,11 +68,11 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			 * ...
 			 */
 			runwayList.add(i + 1, new Runway(runwayName));
-			
+
 			//System.out.println(runwayList.toString());
-			
+
 		} // END FOR
-				
+
 		while(userSelection != 9) 
 		{
 			System.out.println("Select from the following menu:");
@@ -93,55 +87,56 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			System.out.println("\t9. Exit program");
 			System.out.print("Make your menu selection now: ");
 			userSelection = Integer.parseInt(stdin.readLine().trim());
-			
+
 			System.out.println(userSelection);
-			
+
 			/**
 			 * For each option, call static in the Driver class that handle
 			 * the input and output.
 			 */
 			switch(userSelection)
 			{
-				case 1: // 
+				case 1: // Add a plane
 				{
-					addPlane(runwayList);
+					addPlane(runwayList, listOfPlanes);
 					break;
 				}
-				case 2: // 
-				{	
-					launch(runwayList, flightTakeOffCounter, launchOrder);
-					System.out.println("\n\nLAUNCH ORDER: " + launchOrder); // NOT INCREMENTING LIKE IT SHOULD!
+				case 2: // Plane takes off
+				{
+					launchPlane(runwayList, listOfPlanes);	
 					break;
 				}
-				case 3: // 
-				{	
+				case 3: // Plane is allowed to re-enter a runway
+				{
+					reEnter(runwayList);
 					break;
 				}
-				case 4: // 
-				{	
-					break;
-				}
-				case 5: // 
+				case 4: // Runway opens
 				{	
 					break;
 				}
-				case 6: // 
+				case 5: // Runway closes
+				{	
+					break;
+				}
+				case 6: // Display info about planes waiting to take off
 				{
 					displayInfoForTakeOff(runwayList);
 					break;
 				}
-				case 7: // 
+				case 7: // Display info about planes waiting to be allowed to re-enter a runway
 				{
 					displayInfoForReEntry(runwayList);
 					break;
 				}
-				case 8: // 
+				case 8: // Display number of planes taken off
 				{
+					displayNumOfPlanesTakenOff();
 					break;
 				}
 				case 9: // Exit the program
 				{
-					System.out.print("\tExiting the program -- Goodbye!");
+					System.out.print("\tThank you for using the Airport Program -- Goodbye!");
 					break;
 				}
 				default: // Invalid selection
@@ -152,8 +147,8 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 			} // END SWITCH
 		} // END WHILE
 	} // END main() method
-	
-	public static void addPlane(ListArrayBasedGeneric<Runway> runwayList) throws IOException
+
+	public static void addPlane(ListArrayBasedGeneric<Runway> runwayList, AOSLArrayBased listOfPlanes) throws IOException
 	{
 		/**
 		 * Get the input --> flight number, destination, and run way
@@ -164,153 +159,259 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		 * name (which we want), and none for the flight number (uniqueness)
 		 */
 		String flightNumber = "", destination = "", runway = "";
-		
+
 		int searchReturn = 0;
-		
+
 		System.out.print("\tEnter the flight number: ");
 		flightNumber = stdin.readLine().trim();
 		System.out.println(flightNumber);
-		
+
 		//searchReturn = binarySearch(flightNumber, runwayList, "f");
-		searchReturn = search(flightNumber, runwayList, "f");
-		
-		while(searchReturn >= 0)
+		/*searchReturn = binarySearch(flightNumber, runwayList, "f");
+
+		searchReturn = listOfPlanes.search(flightNumber);*/
+
+		searchReturn = planeSearch(flightNumber, listOfPlanes);
+
+		/*while(searchReturn >= 0)
 		{
 			System.out.println("\tInvalid flight number. Please re-enter the flight number: ");
-			
+
 			flightNumber = stdin.readLine().trim();
-			
+
 			System.out.println(flightNumber);
-			
-			searchReturn = search(flightNumber, runwayList, "f");
+
+			searchReturn = binarySearch(flightNumber, runwayList, "f");
+		}*/
+
+		while(searchReturn == 1)
+		{
+			System.out.print("\tInvalid flight number. Please re-enter the flight number: ");
+			flightNumber = stdin.readLine().trim();
+			System.out.println(flightNumber);
+			searchReturn = planeSearch(flightNumber, listOfPlanes);
 		}
-		
+
+		// Valid flight number, add it to the list to keep track of it's uniqueness for later
+		listOfPlanes.add(flightNumber);
+
 		System.out.print("\tEnter the destination: ");
 		destination = stdin.readLine().trim();
 		System.out.println(destination);
-		
+
 		System.out.print("\tEnter the runway: ");
 		runway = stdin.readLine().trim();
 		System.out.println(runway);
-		
+
 		searchReturn = search(runway, runwayList, "r");
-		
+
 		while(searchReturn < 0) // If the run way was not found, then re prompt
 		{
 			System.out.print("\tInvalid runway. Please re-enter the runway: ");
-			
+
 			runway = stdin.readLine().trim();
-			
+
 			System.out.println(runway);
-			
+
 			searchReturn = search(runway, runwayList, "r");
 		}
-		
+
 		/**
 		 * If it gets to this point, searchReturn will be the index of the 
 		 * runway that was found, then add the plane to that plane
 		 */
 		runwayList.get(searchReturn).addPlane(flightNumber, destination, runway);
-		
+
 		System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + runway);
-		
+
 		System.out.println();
 	}
 	
-	/**
-	 * NOT WORKING
-	 * NOT WORKING
-	 * NOT WORKING
-	 * NOT WORKING
-	 * NOT WORKING
-	 * NOT WORKING
-	 * NOT WORKING
-	 * NOT WORKING
-	 * 
-	 * @param runwayList
-	 * @param flightTakeOffCounter
-	 * @param launchOrder
-	 * @throws IOException
-	 */
-	public static void launch(ListArrayBasedGeneric<Runway> runwayList, Integer flightTakeOffCounter, Integer launchOrder) throws IOException
+	public static void launchPlane(ListArrayBasedGeneric<Runway> runwayList, AOSLArrayBased listOfPlanes) throws IOException
 	{
-		int size = runwayList.size();
-		int sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
+		int sizeOfAirport = runwayList.size();
 		int sizeOfRunway = 0;
 		String flightNumber = "";
-		char userInput = '@';
+		String runwayName = "";
+		char userInput = '!';
+		boolean readyToLaunch = false;
+		int orderOfLaunch;
+		int numberOfPlanes = 0;
 		
-		/**
-		 * We want launchOrder to start AFTER purgatory
-		 * but we don't want to go out of bounds
-		 */
-		if(launchOrder >= 1 && launchOrder < size)
+		// Can't rely on the listOfPlanes' size because if planes are in purgatory, then they
+		// are not taken out of the listOfPlanes' list and still CONTRIBUTE to the size even
+		// though they are not on the runways to take off, so have to go through each runway 
+		// and count the size and total them up to get a accurate, updated count for the
+		// number of planes
+		for(int i = 1; i < sizeOfAirport; i++)
 		{
-			sizeOfRunway = runwayList.get(launchOrder).getListOfPlanes().size();
-			
-			if(sizeOfRunway > 0) // Launch the first put in plane
+			numberOfPlanes += runwayList.get(i).getListOfPlanes().size();
+		}
+		
+		System.out.println("\tSize of airport: " + sizeOfAirport);
+		if(numberOfPlanes > 0) // Only launch, if there is a runway
+		{
+			while(readyToLaunch == false)
 			{
-				// Get the flight number
-				flightNumber = runwayList.get(launchOrder).getListOfPlanes().get(0).getFlightNumber();
+				// Get the launch order and size of the runway
+				orderOfLaunch = getLaunchOrder();
+				System.out.println("\tLaunch order: " + orderOfLaunch);
+				sizeOfRunway = runwayList.get(orderOfLaunch).getListOfPlanes().size();
 				
-				System.out.print("\tIs flight " + flightNumber + " cleared for takeoff (Y/N): ");
-				userInput = stdin.readLine().trim().charAt(0);
-				System.out.println(userInput);
-				
-				if(userInput == 'Y' || userInput == 'y') // Take off, increment the launchOrder
+				System.out.println("\tSize of runway: " + sizeOfRunway);
+				if(sizeOfRunway > 0) // Has atleast 1 plane in it
 				{
-					runwayList.get(launchOrder).takeOff();
-					flightTakeOffCounter++;
-					launchOrder++;
-					Integer.sum(launchOrder, 1);
+					// Get the flight number from the runway
+					flightNumber = runwayList.get(orderOfLaunch).getListOfPlanes().get(0).getFlightNumber();
+					
+					System.out.print("\tIs " + flightNumber + " cleared for takeoff(Y/N): ");
+					userInput = stdin.readLine().trim().charAt(0);
+					
+					if(userInput == 'Y' || userInput == 'y') // Yes --> Take off
+					{
+						// Get the runway name to display it
+						runwayName = runwayList.get(orderOfLaunch).getListOfPlanes().get(0).getRunway();
+						
+						// Launch the plane
+						runwayList.get(orderOfLaunch).takeOff();
+						
+						System.out.println("\tFlight " + flightNumber + " has now taken off from runway " + runwayName);
+						
+						// Remove it from the list of planes, so it can be added back in the future
+						listOfPlanes.remove(listOfPlanes.search(flightNumber));
+						
+						// Increment flight counter and launch order
+						/**
+						 * sizeOfAirport - 1 because:
+						 * P A B C
+						 *   1 2 3
+						 *   reset to 1 when launchOrder reaches 3 which is
+						 *   size of the runway (4) - 1
+						 */
+						if(launchOrder == sizeOfAirport - 1)
+						{
+							setLaunchOrder(1);
+						}
+						else
+						{
+							incrementLaunchOrder();
+						}
+						
+						// Increment flight counter
+						incrementFlightTakeOffCounter();
+					}
+					else // User didn't give clearance --> Add it to purgatory and increment launch order but not the flight counter
+					{
+						System.out.println("\tFlight " + flightNumber + " is now waiting to be allowed to re-enter a runway");
+						
+						runwayList.get(0).addPlane(runwayList.get(orderOfLaunch).removeFromRunway(0));
+						
+						// Incrementlaunch order
+						if(launchOrder == sizeOfAirport - 1)
+						{
+							setLaunchOrder(1);
+						}
+						else
+						{
+							incrementLaunchOrder();
+						}
+					}
+					
+					readyToLaunch = true; // Quit after 1 iteration, whether the plane is launched or not
 				}
-				else // Put it in purgatory, and increment launchOrder
+				else // Get it to a launch order where it will have a plane
 				{
-					/**
-					 * Use the removeFromRunway() method which returns the element that was removed, and adds
-					 * it to the purgatory list
-					 */
-					runwayList.get(0).getListOfPlanes().add(sizeOfPurgatory, runwayList.get(launchOrder).removeFromRunway());
-					System.out.println("\tFlight " + flightNumber + " is now waiting to re-enter a runway");
-					launchOrder++;
+					if(launchOrder == sizeOfAirport - 1) // It has reached the end of the runway count, so reset it to start at 1 (AFTER purgatory)
+					{
+						setLaunchOrder(1); // Set it back to 1 so it can start again
+					}
+					else // Launch order hasn't reached the end, increment it by 1
+					{
+						incrementLaunchOrder();
+					}
 				}
-			}
-			else // No planes on the runway, increment the launch order to the next runway
-			{
-				System.out.println("\tThere are no planes on the runway");
-				launchOrder++;
 			}
 		}
-		else // If the launchOrder has reached the end, start at 1 again, in a circular fashion
+		else
 		{
-			launchOrder = 1;
+			System.out.println("\tNo planes on any runway!");
 		}
 		
 		System.out.println();
 	}
 	
+
+	public static void reEnter(ListArrayBasedGeneric<Runway> runwayList) throws IOException // Option 3
+	{
+		String flightNumber = "";
+		String flightWaitingForTakeOff = "";
+		String runway = "";
+		boolean found = false;
+		int sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
+		int indexToAddAt = 0;
+
+		if(sizeOfPurgatory > 0)
+		{
+			while(found == false) // No initial match found
+			{
+				System.out.print("\tEnter the flight number: "); // Get the flight number
+				flightNumber = stdin.readLine().trim();
+
+				// Search purgatory if there are any matches for the flight number
+				for(int i = 0; i < sizeOfPurgatory && found == false; i++)
+				{
+					flightWaitingForTakeOff = runwayList.get(0).getListOfPlanes().get(i).getFlightNumber(); // Get each flight number from purgatory
+
+					if(flightWaitingForTakeOff.compareToIgnoreCase(flightNumber) == 0) // If it's a match, then add it back to the queue
+					{
+						found = true;
+						runway = runwayList.get(0).getListOfPlanes().get(i).getRunway(); // Get the runway of the found plane
+
+						System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + runway);
+
+						indexToAddAt = search(runway, runwayList, "r"); // Returns the index of the runway found
+
+						// Add it to the original runway
+						runwayList.get(indexToAddAt).addPlane(runwayList.get(0).removeFromRunway(i));
+					}
+				}
+
+				if(found == false) // If not found, then notify the user that the plane isn't waiting for clearance
+				{
+					System.out.println("\tFlight " + flightNumber + " is not waiting for clearance");
+				}
+			}
+		}
+		else
+		{
+			System.out.println("\tThere are no planes waiting for clearance");
+		}
+
+		System.out.println();
+	}
+
 	public static void displayInfoForTakeOff(ListArrayBasedGeneric<Runway> runwayList) // Option # 6
 	{
 		int size = runwayList.size();
 		int sizeOfRunway = 0;
 		String runwayName = "", flightNumber = "", destination = "";
-		
+
 		for(int i = 1; i < size; i++) // We want to display all run ways, except Purgatory
 		{
 			// Get the run way name and the size of that run way
 			sizeOfRunway = runwayList.get(i).getListOfPlanes().size();
 			runwayName = runwayList.get(i).getRunwayName();
-			
-			
+
+
 			if(sizeOfRunway > 0) // If the runway has planes on it, display them
 			{
 				System.out.println("\tThese planes are waiting for takeoff on runway " + runwayName);
-				
+
 				for(int j = 0; j < sizeOfRunway; j++) // Go through the runway and print out planes and their destination
 				{
 					flightNumber = runwayList.get(i).getListOfPlanes().get(j).getFlightNumber();
 					destination = runwayList.get(i).getListOfPlanes().get(j).getDestination();
-					
+
 					System.out.println("\t\tFlight " + flightNumber + " to " + destination);
 				}
 			}
@@ -319,25 +420,25 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 				System.out.println("\tNo planes are waiting for takeoff on runway " + runwayName + "!");
 			}
 		}
-		
+
 		System.out.println();
 	} // END displayInfoAboutTakeOffWait() method
-	
+
 	public static void displayInfoForReEntry(ListArrayBasedGeneric<Runway> runwayList) // Option # 7
 	{
 		// We are only printing out the contents of Purgatory
 		int sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
 		String flightNumber = "", destination = "";
-		
+
 		if(sizeOfPurgatory > 0)
 		{
 			System.out.println("\tThese planes are waiting to be cleared to re-enter a runway:");
-			
+
 			for(int i = 0; i < sizeOfPurgatory; i++)
 			{
 				flightNumber = runwayList.get(0).getListOfPlanes().get(i).getFlightNumber();
 				destination = runwayList.get(0).getListOfPlanes().get(i).getDestination();
-				
+
 				System.out.println("\t\tFlight " + flightNumber + " to " + destination);
 			}
 		}
@@ -345,139 +446,78 @@ static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in
 		{
 			System.out.println("\tNo planes are waiting to be cleared to re-enter a runway!");
 		}
-		
+
 		System.out.println();
 	}
 	
+	public static void displayNumOfPlanesTakenOff()
+	{
+		int numOfPlanesTakenOff = getFlightTakeOffCount();
+		
+		System.out.println("\t" + numOfPlanesTakenOff + " planes have taken off from the airport");
+		
+		System.out.println();
+	}
+
 	private static int search(String item, ListArrayBasedGeneric<Runway> runwayList, String option)
 	{
 		int size = runwayList.size();
-		int sizeOfRunway = 0;
 		String itemFromList = "";
-		
-		switch(option)
+
+		for(int i = 0; i < size; i++)
 		{
-			case "r":
+			itemFromList = runwayList.get(i).getRunwayName();
+
+			if(itemFromList.compareToIgnoreCase(item) == 0)
 			{
-				for(int i = 0; i < size; i++)
-				{
-					itemFromList = runwayList.get(i).getRunwayName();
-					
-					if(itemFromList.compareToIgnoreCase(item) == 0)
-					{
-						return i;
-					}
-				}
-				
-				return -1;
-			}
-			case "f":
-			{
-				for(int i = 0; i < size; i++)
-				{
-					sizeOfRunway = runwayList.get(i).getListOfPlanes().size();
-					
-					for(int j = 0; j < sizeOfRunway; j++)
-					{
-						itemFromList = runwayList.get(i).getListOfPlanes().get(j).getFlightNumber();
-						
-						if(itemFromList.compareToIgnoreCase(item) == 0)
-						{
-							return i;
-						}
-					}
-				}
-				
-				return -1;
-			}
-			default:
-			{
-				System.out.println("Cannot do anything");
+				return i;
 			}
 		}
+
+		return -1;
 		
-		return 1;
+	}
+
+	private static int planeSearch(String item, AOSLArrayBased listOfPlanes)
+	{
+		int returnedValue = 0;
+
+		// Uses the listOfPlanes' search method to search for duplicates in
+		// the ordered listOfPlanes
+		returnedValue = listOfPlanes.search(item);
+
+		if(returnedValue >= 0) // There are duplicates
+		{
+			return 1; // Duplicate
+		}
+		else
+		{
+			return 0; // No duplicate 
+		}
+	} // END planeSearch() method
+	
+	private static void setLaunchOrder(int i)
+	{
+		launchOrder = i;
 	}
 	
-	/**
-	 * NOT USED
-	 * NOT USED
-	 * NOT USED
-	 * NOT USED
-	 * NOT USED
-	 * NOT USED
-	 * NOT USED
-	 * NOT USED
-	 * 
-	 * @param item
-	 * @param runwayList
-	 * @param option
-	 * @return
-	 */
-	private static int binarySearch(String item, ListArrayBasedGeneric<Runway> runwayList, String option)
+	private static void incrementLaunchOrder()
 	{
-		int high = runwayList.size() - 1;
-		int low = 0;
-		int mid = 0;
-		
-		switch(option)
-		{
-			case "r": // Search for duplicate runways
-			{
-				while(low <= high)
-				{
-					mid = (low + high) / 2;
-					
-					if(runwayList.get(mid).getRunwayName().compareToIgnoreCase(item) < 0)
-					{
-						low = mid + 1;
-					}
-					else if(runwayList.get(mid).getRunwayName().compareToIgnoreCase(item) > 0)
-					{
-						high = mid - 1;
-					}
-					else
-					{
-						return mid;
-					}
-				}
-				
-				// Not found
-				return -1;
-			}
-			case "f": // Search for duplicate flight numbers
-			{
-				int size = runwayList.size();
-				
-				for(int i = 0; i < size; i++) // Start at 0 because we need to check purgatory
-				{
-					while(low <= high)
-					{
-						mid = low + high / 2;
-						
-						if(runwayList.get(i).getListOfPlanes().get(mid).getFlightNumber().compareToIgnoreCase(item) < 0)
-						{
-							low = mid + 1;
-						}
-						else if(runwayList.get(i).getListOfPlanes().get(mid).getFlightNumber().compareToIgnoreCase(item) > 0)
-						{
-							high = mid - 1;
-						}
-						else
-						{
-							return mid;
-						}
-					}
-				}
-				
-				return -1;
-			}
-			default:
-			{
-				System.out.println("Invalid option");
-			}
-		}
-		
-		return 1;
+		launchOrder++;
+	}
+	
+	private static int getLaunchOrder()
+	{
+		return launchOrder;
+	}
+	
+	private static void incrementFlightTakeOffCounter()
+	{
+		flightTakeOffCounter++;
+	}
+	
+	private static int getFlightTakeOffCount()
+	{
+		return flightTakeOffCounter;
 	}
 } // END CLASS Driver {}

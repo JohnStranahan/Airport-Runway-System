@@ -25,22 +25,14 @@ public class Runway
 	} // END addPlane() method
 	
 	/**
-	 * NO NEED TO RETURN ANYTHING!!!!! BECAUSE THE LOGIC IS WRONG!
-	 * NEED TO CONFIRM LAUNCH BEFORE LAUNCH CAN OCCUR SO WE NEED
-	 * TO GET THE FLIGHNUMBER BEFORE CALLING THIS METHOD AND
-	 * RETURNING THE FLIGHTNUMBER WOULD BE REDUNDANT
-	 * @return
+	 * When adding from purgatory or a closing runway
+	 * @param plane
 	 */
-	public String launchPlane()
+	public void addPlane(Plane plane)
 	{
-		String flightNumber = arrayOfPlanes.get(0).getFlightNumber();
-		
-		// Remove the 1st flight
-		arrayOfPlanes.remove(0);
-		
-		return flightNumber;
-	} // END launchPlane() method
-	
+		int size = arrayOfPlanes.size();
+		arrayOfPlanes.add(size, plane);
+	}	
 	/**
 	 * Just removes the element from the 0th index
 	 */
@@ -51,12 +43,13 @@ public class Runway
 	
 	/**
 	 * Returns the element that was removed -- For adding it to purgatory
+	 * or back to a runway from purgatory
 	 */
-	public Plane removeFromRunway()
+	public Plane removeFromRunway(int index)
 	{
-		Plane temp = arrayOfPlanes.get(0);
+		Plane temp = arrayOfPlanes.get(index);
 		
-		arrayOfPlanes.remove(0);
+		arrayOfPlanes.remove(index);
 		
 		return temp;
 	}
