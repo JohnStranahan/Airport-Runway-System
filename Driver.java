@@ -4,6 +4,7 @@ import java.io.*;
 public class Driver 
 {
 	static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+	
 	private static int launchOrder = 1; // We want launch to occur AFTER Purgatory
 	private static int flightTakeOffCounter = 0;
 	
@@ -52,12 +53,12 @@ public class Driver
 				System.out.println(runwayName);
 
 				searchResult = search(runwayName, runwayList);
-			}
+			} // END WHILE
 
 			if(searchResult < 0)
 			{
 				System.out.println("\tRunway " + runwayName + " added successfully\n");
-			}
+			} // END IF
 
 			/**
 			 * Add the new runway one after another like so:
@@ -68,9 +69,6 @@ public class Driver
 			 * ...
 			 */
 			runwayList.add(i + 1, new Runway(runwayName));
-
-			//System.out.println(runwayList.toString());
-
 		} // END FOR
 
 		while(userSelection != 9) 
@@ -87,7 +85,6 @@ public class Driver
 			System.out.println("\t9. Exit program");
 			System.out.print("Make your menu selection now: ");
 			userSelection = Integer.parseInt(stdin.readLine().trim());
-
 			System.out.println(userSelection);
 
 			/**
@@ -234,23 +231,22 @@ public class Driver
 			numberOfPlanes += runwayList.get(i).getListOfPlanes().size();
 		}
 		
-		System.out.println("\tSize of airport: " + sizeOfAirport);
 		if(numberOfPlanes > 0) // Only launch, if there is a runway
 		{
 			while(readyToLaunch == false)
 			{
 				// Get the launch order and size of the runway
 				orderOfLaunch = getLaunchOrder();
-				System.out.println("\tLaunch order: " + orderOfLaunch);
+				
+				// Get the size of the runway that is set to launch
 				sizeOfRunway = runwayList.get(orderOfLaunch).getListOfPlanes().size();
 				
-				System.out.println("\tSize of runway: " + sizeOfRunway);
 				if(sizeOfRunway > 0) // Has atleast 1 plane in it
 				{
 					// Get the flight number from the runway
 					flightNumber = runwayList.get(orderOfLaunch).getListOfPlanes().get(0).getFlightNumber();
 					
-					System.out.print("\tIs " + flightNumber + " cleared for takeoff(Y/N): ");
+					System.out.print("\tFlight " + flightNumber + " cleared for takeoff(Y/N): ");
 					userInput = stdin.readLine().trim().charAt(0);
 					System.out.println(userInput);
 					
@@ -393,8 +389,6 @@ public class Driver
 		
 		while(searchReturn >= 0) // If Purgatory is entered or any other invalid name is entered
 		{
-			System.out.println();
-
 			System.out.println("\tRunway " + runwayName + " already exists, please choose another name");
 			
 			System.out.print("\tEnter the name of the new runway: ");
@@ -403,12 +397,13 @@ public class Driver
 
 			System.out.println(runwayName);
 
+			// Check for duplicates again
 			searchReturn = search(runwayName, runwayList);
 		}
 
 		if(searchReturn < 0)
 		{
-			System.out.println("\tRunway " + runwayName + " added successfully\n");
+			System.out.println("\tRunway " + runwayName + " has opened\n");
 		}
 
 		// Add the new runway at the end
@@ -436,97 +431,47 @@ public class Driver
 		int sizeOfRunwayToDelete = 0;
 		int sizeOfPurgatory = 0;
 		int indexOfTheRunwayToDelete = 0;
+		int sizeOfAirport = runwayList.size();
 		
-		System.out.print("\tEnter the runway to close: ");
-		runwayNameToDelete = stdin.readLine().trim();
-		System.out.println(runwayNameToDelete);
-		
-		// Check to see if the runway that is to be deleted is valid
-		searchReturn = search(runwayNameToDelete, runwayList);
-		
-		while(searchReturn < 0)
+		if(sizeOfAirport > 1) // More than purgatory, can't delete purgatory
 		{
-			System.out.println("\tNo such runway!");
 			System.out.print("\tEnter the runway to close: ");
 			runwayNameToDelete = stdin.readLine().trim();
 			System.out.println(runwayNameToDelete);
-			
+
+			// Check to see if the runway that is to be deleted is valid
 			searchReturn = search(runwayNameToDelete, runwayList);
-		}
-		
-		// Searchreturn is the indexOf the runway, so set it to a value --> indexOfTheRunwayToDelete
-		sizeOfRunwayToDelete = runwayList.get(searchReturn).getListOfPlanes().size();
-		indexOfTheRunwayToDelete = searchReturn; // Just so we don't mess it up later
-		
-		System.out.println("\tIndex of the runway to delete: " + indexOfTheRunwayToDelete);
-		
-		// Go through the runway itself first
-		for(int i = 0; i < sizeOfRunwayToDelete; i++)
-		{
-			// Get the flight number of the plane
-			flightNumber = runwayList.get(indexOfTheRunwayToDelete).getListOfPlanes().get(0).getFlightNumber();
-			
-			System.out.print("\tEnter a new runway for plane " + flightNumber + ": ");
-			newRunwayForPlanes = stdin.readLine().trim();
-			System.out.println(newRunwayForPlanes);
-			
-			// Check if the new runway is valid
-			searchReturn = search(newRunwayForPlanes, runwayList);
-			
-			// New runway has to be in the runway list AND not equal to the runway that is to be deleted
-			while(searchReturn < 0 || searchReturn == indexOfTheRunwayToDelete)
-			{
-				if(searchReturn == indexOfTheRunwayToDelete) // If the runway is the one that is going to be deleted
-				{
-					System.out.println("\tThis is the runway that is runway that is closing!");
-				}
-				else // If the runway isn't in the list
-				{
-					System.out.println("\tNo such runway!");
-				}
-				
-				// Get the input again
-				System.out.print("\tEnter a new runway for plane " + flightNumber + ": ");
-				newRunwayForPlanes = stdin.readLine().trim();
-				System.out.println(newRunwayForPlanes);
 
-				// Check if the new runway is valid
-				searchReturn = search(newRunwayForPlanes, runwayList);
+			// Validate that the runway exists in the runway list
+			while(searchReturn < 0)
+			{
+				System.out.println("\tNo such runway!");
+				System.out.print("\tEnter the runway to close: ");
+				runwayNameToDelete = stdin.readLine().trim();
+				System.out.println(runwayNameToDelete);
+
+				searchReturn = search(runwayNameToDelete, runwayList);
 			}
-			
-			// Remove the plane from runway to delete and add it to the new runway
-			// searchReturn is the new runway's index so just use that
-			runwayList.get(searchReturn).addPlane(runwayList.get(indexOfTheRunwayToDelete).removeFromRunway(0));
 
-			// Echo it out
-			System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + newRunwayForPlanes);
-		}
-		
-		// Go through purgatory
-		sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
-		
-		// Go through purgatory
-		for(int i = 0; i < sizeOfPurgatory; i++)
-		{
-			// Get the runway name of each element, so we can compare it with the runwayNameToDelete
-			runwayNameInPurgatory = runwayList.get(0).getListOfPlanes().get(0).getRunway();
-			
-			// Get the flight number of each element
-			flightNumber = runwayList.get(0).getListOfPlanes().get(0).getFlightNumber();
-			
-			// If the runwayNameInPutgatory is equivalent to the runwayNameToDelete, then prompt
-			// for a new runway, and do the checking
-			if(runwayNameInPurgatory.equalsIgnoreCase(runwayNameToDelete))
+			// Searchreturn is the indexOf the runway, so set it to a value --> indexOfTheRunwayToDelete
+			sizeOfRunwayToDelete = runwayList.get(searchReturn).getListOfPlanes().size();
+			indexOfTheRunwayToDelete = searchReturn; // Just so we don't mess it up later
+
+			// Go through the runway itself first
+			for(int i = 0; i < sizeOfRunwayToDelete; i++)
 			{
+				// Get the flight number of the plane
+				flightNumber = runwayList.get(indexOfTheRunwayToDelete).getListOfPlanes().get(0).getFlightNumber();
+
 				System.out.print("\tEnter a new runway for plane " + flightNumber + ": ");
 				newRunwayForPlanes = stdin.readLine().trim();
 				System.out.println(newRunwayForPlanes);
-				
+
 				// Check if the new runway is valid
 				searchReturn = search(newRunwayForPlanes, runwayList);
-				
+
 				// New runway has to be in the runway list AND not equal to the runway that is to be deleted
-				while(searchReturn < 0 || (searchReturn == indexOfTheRunwayToDelete))
+				while(searchReturn < 0 || searchReturn == indexOfTheRunwayToDelete)
 				{
 					if(searchReturn == indexOfTheRunwayToDelete) // If the runway is the one that is going to be deleted
 					{
@@ -536,33 +481,93 @@ public class Driver
 					{
 						System.out.println("\tNo such runway!");
 					}
-					
+
 					// Get the input again
 					System.out.print("\tEnter a new runway for plane " + flightNumber + ": ");
 					newRunwayForPlanes = stdin.readLine().trim();
 					System.out.println(newRunwayForPlanes);
-					
+
 					// Check if the new runway is valid
 					searchReturn = search(newRunwayForPlanes, runwayList);
 				}
-				
+
 				// Remove the plane from runway to delete and add it to the new runway
 				// searchReturn is the new runway's index so just use that
-				runwayList.get(searchReturn).addPlane(runwayList.get(0).removeFromRunway(0));
-				
+				runwayList.get(searchReturn).addPlane(runwayList.get(indexOfTheRunwayToDelete).removeFromRunway(0));
+
 				// Echo it out
 				System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + newRunwayForPlanes);
 			}
+
+			// Go through purgatory, get the size of purgatory
+			sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
+
+			// Go through purgatory
+			for(int i = 0; i < sizeOfPurgatory; i++)
+			{
+				// Get the runway name of each element, so we can compare it with the runwayNameToDelete
+				runwayNameInPurgatory = runwayList.get(0).getListOfPlanes().get(0).getRunway();
+
+				// Get the flight number of each element
+				flightNumber = runwayList.get(0).getListOfPlanes().get(0).getFlightNumber();
+
+				// If the runwayNameInPutgatory is equivalent to the runwayNameToDelete, then prompt
+				// for a new runway, and do the checking
+				if(runwayNameInPurgatory.equalsIgnoreCase(runwayNameToDelete))
+				{
+					System.out.print("\tEnter a new runway for plane " + flightNumber + ": ");
+					newRunwayForPlanes = stdin.readLine().trim();
+					System.out.println(newRunwayForPlanes);
+
+					// Check if the new runway is valid
+					searchReturn = search(newRunwayForPlanes, runwayList);
+
+					// New runway has to be in the runway list AND not equal to the runway that is to be deleted
+					while(searchReturn < 0 || (searchReturn == indexOfTheRunwayToDelete))
+					{
+						if(searchReturn == indexOfTheRunwayToDelete) // If the runway is the one that is going to be deleted
+						{
+							System.out.println("\tThis is the runway that is closing!");
+						}
+						else // If the runway isn't in the list
+						{
+							System.out.println("\tNo such runway!");
+						}
+
+						// Get the input again
+						System.out.print("\tEnter a new runway for plane " + flightNumber + ": ");
+						newRunwayForPlanes = stdin.readLine().trim();
+						System.out.println(newRunwayForPlanes);
+
+						// Check if the new runway is valid
+						searchReturn = search(newRunwayForPlanes, runwayList);
+					}
+
+					// Remove the plane from runway to delete and add it to the new runway
+					// searchReturn is the new runway's index so just use that
+					// REASSIGN THE RUNWAY --> DON'T ADD IT TO THE NEW RUNWAY BECAUSE
+					// IT'S IN PURGATORY --> NEED CLEARANCE TO RE-ENTER
+					// runwayList.get(searchReturn).addPlane(runwayList.get(0).removeFromRunway(0));
+					// Bug Fixed
+					runwayList.get(0).getListOfPlanes().get(0).setRunway(newRunwayForPlanes);
+					
+					// Echo it out
+					System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + newRunwayForPlanes);
+				}
+			}
+
+			// Delete the runway element from the runwayList
+			runwayList.remove(indexOfTheRunwayToDelete);
+
+			System.out.println("\tRunway " + runwayNameToDelete + " has been closed");
 		}
-		
-		// Delete the runway element from the runwayList
-		System.out.println("\tIndex of runway to delete: " + indexOfTheRunwayToDelete);
-		runwayList.remove(indexOfTheRunwayToDelete);
-		
-		System.out.println("\tRunway " + runwayNameToDelete + " has been closed");
+		else // No runways on the airport
+		{
+			System.out.println("\tThere are no runways to delete");
+		} // END IF/ELSE
 		
 		System.out.println();
-	}
+	} // END closeRunway() method
 
 	public static void displayInfoForTakeOff(ListArrayBasedGeneric<Runway> runwayList) // Option # 6
 	{
@@ -587,13 +592,13 @@ public class Driver
 					destination = runwayList.get(i).getListOfPlanes().get(j).getDestination();
 
 					System.out.println("\t\tFlight " + flightNumber + " to " + destination);
-				}
+				} // END FOR
 			}
 			else // Else, display that no planes are waiting for take off
 			{
 				System.out.println("\tNo planes are waiting for takeoff on runway " + runwayName + "!");
-			}
-		}
+			} // END IF/ELSE
+		} // END FOR
 
 		System.out.println();
 	} // END displayInfoAboutTakeOffWait() method
@@ -604,7 +609,7 @@ public class Driver
 		int sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
 		String flightNumber = "", destination = "";
 
-		if(sizeOfPurgatory > 0)
+		if(sizeOfPurgatory > 0) // If there is at least 1 plane in purgatory, print it
 		{
 			System.out.println("\tThese planes are waiting to be cleared to re-enter a runway:");
 
@@ -614,15 +619,15 @@ public class Driver
 				destination = runwayList.get(0).getListOfPlanes().get(i).getDestination();
 
 				System.out.println("\t\tFlight " + flightNumber + " to " + destination);
-			}
+			} // END FOR
 		}
-		else
+		else // No planes in purgatory
 		{
 			System.out.println("\tNo planes are waiting to be cleared to re-enter a runway!");
-		}
+		} // END IF/ELSE
 
 		System.out.println();
-	}
+	} // END displayInfoForReEntry() method
 	
 	public static void displayNumOfPlanesTakenOff() // Option # 8
 	{
@@ -631,7 +636,7 @@ public class Driver
 		System.out.println("\t" + numOfPlanesTakenOff + " planes have taken off from the airport");
 		
 		System.out.println();
-	}
+	} // END displayNumOfPlanesTakenOff() method
 
 	private static int search(String item, ListArrayBasedGeneric<Runway> runwayList)
 	{
@@ -645,12 +650,11 @@ public class Driver
 			if(itemFromList.compareToIgnoreCase(item) == 0)
 			{
 				return i;
-			}
-		}
+			} // END IF
+		} // END FOR
 
 		return -1;
-		
-	}
+	} // END search() method
 
 	private static int planeSearch(String item, AOSLArrayBased listOfPlanes)
 	{
@@ -667,33 +671,29 @@ public class Driver
 		else
 		{
 			return 0; // No duplicate 
-		}
+		} // END IF/ELSE
 	} // END planeSearch() method
 	
 	private static void setLaunchOrder(int i)
 	{
 		launchOrder = i;
-	}
+	} // END setLaunchOrder() method
 	
 	private static void incrementLaunchOrder()
 	{
 		launchOrder++;
-	}
+	} // END incrementLaunchOrder() method
 	
 	private static int getLaunchOrder()
 	{
 		return launchOrder;
-	}
+	} // END getLaunchOrder() method
 	
 	private static void incrementFlightTakeOffCounter()
 	{
 		flightTakeOffCounter++;
-	}
+	} // END incrementFlightTakeOffCounter() method
 	
-	/**
-	 * 
-	 * @return
-	 */
 	private static int getFlightTakeOffCount()
 	{
 		return flightTakeOffCounter;
