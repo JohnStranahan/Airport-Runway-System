@@ -76,5 +76,4 @@ public class Runway
 	{
 		return "Runway [runwayName=" + runwayName + ", arrayOfPlanes=" + arrayOfPlanes + "]\n";
 	} // END toString() method
-	
 } // END CLASS Runway{}
