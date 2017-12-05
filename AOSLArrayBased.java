@@ -9,27 +9,45 @@
  * @version 2017.4.12
  */
 
+/**
+ * @author John
+ *
+ */
 public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 {
 	private String [] items;
 	private int numItems;
 
+
+	/**
+	 * Constructor instantiates an empty array
+	 */
 	public AOSLArrayBased()
 	{
 		items = new String[3];
 		numItems = 0;
 	} // END AOSLArrayBased() Constructor
 	
+	/**
+	 * 
+	 * @return true if numItems = 0
+	 */
 	public boolean isEmpty()
 	{
 		return numItems == 0;
 	} // END isEmpty() method
 	
+	/**
+	 * @return numItems
+	 */
 	public int size()
 	{
 		return numItems;
 	} // END size() method
 	
+	/**
+	 * Resizes array to 1.5 the original array
+	 */
 	private void resize()
 	{
 		String [] resizedArray = new String[((numItems * 3) / 2) + 1]; // 1.5 times the original array
@@ -44,6 +62,11 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 		items = resizedArray;
 	} // END resize() method
 	
+	/**
+	 * Method gets the element at the given index
+	 * @param index
+	 * @throws ListIndexOutOfBoundsException
+	 */
 	public String get(int index) throws ListIndexOutOfBoundsException
 	{
 		if(index >= 0 && index < numItems)
@@ -55,7 +78,12 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 			throw new ListIndexOutOfBoundsException("ListIndexOutOfBoundsException on get");
 		} // END IF/ELSE
 	} // END get() method
-		
+	
+	/**
+	 * remove() Method removes element at the given index
+	 * @param index
+	 * @throws ListIndexOutOfBoundsException
+	 */
 	public void remove(int index) throws ListIndexOutOfBoundsException
 	{
 		if(index >= 0 && index < numItems)
@@ -75,6 +103,11 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 		} // END IF/ELSE
 	} // END remove() method
 	
+	/**
+	 * add() --Method adds String item at the given index
+	 * @param item
+	 * @throws ListIndexOutOfBoundsException
+	 */
 	public void add(String item) throws ListIndexOutOfBoundsException
 	{
 		int indexToAddAt = 0;
@@ -104,6 +137,11 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 		} // END IF/ELSE
 	} // END add() method
 	
+	/**
+	 * search() method uses binary search to get index of item
+	 * @param item
+	 * @return int
+	 */
 	public int search(String item)
 	{
 		int low = 0;
@@ -131,12 +169,19 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 		return (0 - low - 1);
 	} // END search() method
 
+	/**
+	 * Clears item array
+	 */
 	public void clear() 
 	{
 		items = new String[3];
 		numItems = 0;
 	} // END clear() method
 	
+	/**
+	 * toString method to print elements of type AOSLArrayBased
+	 * @return String
+	 */
 	public String toString()
 	{
 		String elements = "";
