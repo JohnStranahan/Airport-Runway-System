@@ -3,22 +3,22 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 {
 	private String [] items;
 	private int numItems;
-	
+
 	public AOSLArrayBased()
 	{
 		items = new String[3];
 		numItems = 0;
-	}
+	} // END AOSLArrayBased() Constructor
 	
 	public boolean isEmpty()
 	{
 		return numItems == 0;
-	}
+	} // END isEmpty() method
 	
 	public int size()
 	{
 		return numItems;
-	}
+	} // END size() method
 	
 	private void resize()
 	{
@@ -72,7 +72,7 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 		if(numItems == items.length)
 		{
 			resize();
-		}
+		} // END IF
 		
 		indexToAddAt = search(item);
 		
@@ -83,7 +83,7 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 			for(int pos = numItems - 1; pos >= indexToAddAt; pos--)
 			{
 				items[pos + 1] = items[pos];
-			}
+			} // END FOR 
 			
 			items[indexToAddAt] = item;
 			numItems++;
@@ -91,8 +91,8 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 		else
 		{
 			throw new ListIndexOutOfBoundsException("\tError adding to the list");
-		}
-	}
+		} // END IF/ELSE
+	} // END add() method
 	
 	public int search(String item)
 	{
@@ -115,17 +115,17 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 			else
 			{
 				low = mid + 1;
-			}
-		}
+			} // END IF/ELSE
+		} // END WHILE
 		
 		return (0 - low - 1);
-	}
+	} // END add() method
 
 	public void clear() 
 	{
 		items = new String[3];
 		numItems = 0;
-	}
+	} // END clear() method
 	
 	public String toString()
 	{
@@ -134,8 +134,8 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 		for(int i = 0; i < numItems; i++)
 		{
 			elements += items[i] + " ";
-		}
+		} // END FOR
 		
 		return elements;
-	}
+	} // END toString() method
 }
