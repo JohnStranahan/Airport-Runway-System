@@ -14,7 +14,7 @@ public class Plane
 	public String getFlightNumber()
 	{
 		return flightNumber;
-	}
+	} // END getFlightNumber() method
 
 	public void setFlightNumber(String flightNumber)
 	{

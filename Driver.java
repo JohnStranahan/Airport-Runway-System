@@ -493,6 +493,8 @@ public class Driver
 
 				// Remove the plane from runway to delete and add it to the new runway
 				// searchReturn is the new runway's index so just use that
+				// Set the new runway for that element then add
+				runwayList.get(indexOfTheRunwayToDelete).getListOfPlanes().get(0).setRunway(newRunwayForPlanes);
 				runwayList.get(searchReturn).addPlane(runwayList.get(indexOfTheRunwayToDelete).removeFromRunway(0));
 
 				// Echo it out
