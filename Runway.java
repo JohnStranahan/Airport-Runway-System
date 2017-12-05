@@ -1,3 +1,14 @@
+/**
+ * Purpose: Data Structure and Algorithms Fall 2017 Final Project
+ * Status: Complete and throughly tested
+ * Last Update: 12/4/17
+ * Submitted: 12/5/17
+ * Comment: Test suite and sample run attached
+ * @author Tapan Soni
+ * @author John Stranahan
+ * @version 2017.4.12
+ */
+
 public class Runway
 {
 	String runwayName;
@@ -7,7 +18,7 @@ public class Runway
 	public Runway(String runwayName)
 	{
 		this.runwayName = runwayName;
-	}
+	} // END Runway() Constructor
 	
 	public void addPlane(String flightNumber, String destination, String runway)
 	{
@@ -24,27 +35,18 @@ public class Runway
 		arrayOfPlanes.add(size, newPlane);
 	} // END addPlane() method
 	
-	/**
-	 * When adding from purgatory or a closing runway
-	 * @param plane
-	 */
 	public void addPlane(Plane plane)
 	{
 		int size = arrayOfPlanes.size();
 		arrayOfPlanes.add(size, plane);
-	}	
-	/**
-	 * Just removes the element from the 0th index
-	 */
+	}// END addPlane() method	
+
 	public void takeOff()
 	{
 		arrayOfPlanes.remove(0);
-	}
+	} // END takeOff() method
 	
-	/**
-	 * Returns the element that was removed -- For adding it to purgatory
-	 * or back to a runway from purgatory
-	 */
+
 	public Plane removeFromRunway(int index)
 	{
 		Plane temp = arrayOfPlanes.get(index);
@@ -52,12 +54,12 @@ public class Runway
 		arrayOfPlanes.remove(index);
 		
 		return temp;
-	}
+	} // END removeFromRunway() method
 	
 	public ListArrayBasedGeneric<Plane> getListOfPlanes()
 	{
 		return arrayOfPlanes;
-	}
+	} // END getListOfPlanes() method
 	
 	public void setRunwayName(String runwayName)
 	{
@@ -67,11 +69,12 @@ public class Runway
 	public String getRunwayName()
 	{
 		return runwayName;
-	}
+	} // END getRunwayName() method
 
 	@Override
 	public String toString() 
 	{
 		return "Runway [runwayName=" + runwayName + ", arrayOfPlanes=" + arrayOfPlanes + "]\n";
-	}
+	} // END toString() method
+	
 } // END CLASS Runway{}
