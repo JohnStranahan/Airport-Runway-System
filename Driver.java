@@ -157,6 +157,16 @@ public class Driver
 		} // END WHILE
 	} // END main() method
 
+	/**
+	 * addPlane() -- This method takes in input and uses the runwayList's 
+	 * addPlane() functionality to add the plane using the input. It checks
+	 * for the duplicates for flight name using the AOSL and checks for duplicates
+	 * for the runway using the search() method.
+	 * 
+	 * @param runwayList
+	 * @param listOfPlanes
+	 * @throws IOException
+	 */
 	public static void addPlane(ListArrayBasedGeneric<Runway> runwayList, AOSLArrayBased listOfPlanes) throws IOException // Option # 1
 	{
 		/**
@@ -220,6 +230,17 @@ public class Driver
 		System.out.println();
 	} // END addPlane() method
 	
+	/**
+	 * launchPlane() -- This method launches the first method in each plane in a round
+	 * robin manner. It starts at 1, after Purgatory, then increments the launch order
+	 * by 1. If the runway doesn't have any planes to launch, it skips to the next
+	 * runway. When the launch counter reaches the last element, it is reset to 1, so
+	 * it starts back at 1.
+	 * 
+	 * @param runwayList
+	 * @param listOfPlanes
+	 * @throws IOException
+	 */
 	public static void launchPlane(ListArrayBasedGeneric<Runway> runwayList, AOSLArrayBased listOfPlanes) throws IOException // Option # 2
 	{
 		int sizeOfAirport = runwayList.size();
@@ -333,7 +354,14 @@ public class Driver
 		System.out.println();
 	} // END launchPlane() method
 	
-
+	/**
+	 * reEnter() -- This method takes in a String input which is the flight number
+	 * and then searches through Purgatory to get that element It then re-adds 
+	 * this Plane to the correct runway
+	 * 
+	 * @param runwayList
+	 * @throws IOException
+	 */
 	public static void reEnter(ListArrayBasedGeneric<Runway> runwayList) throws IOException // Option 3
 	{
 		String flightNumber = "";
@@ -384,6 +412,14 @@ public class Driver
 		System.out.println();
 	} // END reEnter() method
 	
+	/**
+	 * openRunway() -- This method opens up a runway. It takes in an input of 
+	 * a String, and checks for duplicates (cannot have duplicates). It then
+	 * adds the unique runway at the end of the runwayList list.
+	 * 
+	 * @param runwayList
+	 * @throws IOException
+	 */
 	public static void openRunway(ListArrayBasedGeneric<Runway> runwayList) throws IOException // Option # 4
 	{
 		String runwayName = "";
@@ -420,6 +456,17 @@ public class Driver
 		runwayList.add(size, new Runway(runwayName));
 	} // END openRunway() method
 	
+	/**
+	 * closeRunway() -- This method closes a runway. It starts by first going through the
+	 * runway itself and reassigning those planes' runways to new runways. It checks
+	 * for validatity -- cannot be the runway that is being closed or a runway that is
+	 * not in the runwayList. It then goes through Purgatory and searches through
+	 * each element to see if it has the same runway name and then it prompts for a new
+	 * runway for that Plane
+	 * 
+	 * @param runwayList
+	 * @throws IOException
+	 */
 	public static void closeRunway(ListArrayBasedGeneric<Runway> runwayList) throws IOException // Option # 5
 	{
 		String runwayNameToDelete = "";
@@ -570,6 +617,13 @@ public class Driver
 		System.out.println();
 	} // END closeRunway() method
 
+	/**
+	 * displayInfoForTakeOff() -- This method goes through each runway and prints out the planes
+	 * on that runway. If there are no planes on the runway, it prints out that there are no 
+	 * planes on that runway.
+	 * 
+	 * @param runwayList
+	 */
 	public static void displayInfoForTakeOff(ListArrayBasedGeneric<Runway> runwayList) // Option # 6
 	{
 		int size = runwayList.size();
@@ -604,6 +658,12 @@ public class Driver
 		System.out.println();
 	} // END displayInfoAboutTakeOffWait() method
 
+	/**
+	 * displayInfoForReEntry() -- This method displays all the planes that are waiting in
+	 * purgatory.
+	 * 
+	 * @param runwayList
+	 */
 	public static void displayInfoForReEntry(ListArrayBasedGeneric<Runway> runwayList) // Option # 7
 	{
 		// We are only printing out the contents of Purgatory
@@ -630,6 +690,10 @@ public class Driver
 		System.out.println();
 	} // END displayInfoForReEntry() method
 	
+	/**
+	 * displayNumOfPlanesTakenoff() -- This method displays the number of planes
+	 * that have taken off using the getFlightTakeOffCount() method
+	 */
 	public static void displayNumOfPlanesTakenOff() // Option # 8
 	{
 		int numOfPlanesTakenOff = getFlightTakeOffCount();
@@ -639,6 +703,14 @@ public class Driver
 		System.out.println();
 	} // END displayNumOfPlanesTakenOff() method
 
+	/**
+	 * search() -- This method searches through the runwayList for a runway
+	 * using the item as the key
+	 * 
+	 * @param item
+	 * @param runwayList
+	 * @return i -- The index of the runway or -1 if not found
+	 */
 	private static int search(String item, ListArrayBasedGeneric<Runway> runwayList)
 	{
 		int size = runwayList.size();
@@ -657,6 +729,15 @@ public class Driver
 		return -1;
 	} // END search() method
 
+	/**
+	 * planeSearch() -- This method uses the AOSL's built in
+	 * binary search to search for an element. It returns either a 1
+	 * if a duplicate was found, or 0 if not found
+	 * 
+	 * @param item
+	 * @param listOfPlanes
+	 * @return 1 if found, 0 if not found
+	 */
 	private static int planeSearch(String item, AOSLArrayBased listOfPlanes)
 	{
 		int returnedValue = 0;
@@ -675,26 +756,55 @@ public class Driver
 		} // END IF/ELSE
 	} // END planeSearch() method
 	
+	/**
+	 * setLaunchOrder() -- Sets the launchOrder back to
+	 * the parameter. It is used when the launchOrder
+	 * reaches the end of the runwayList to set it back
+	 * to 1.
+	 * 
+	 * @param i
+	 */
 	private static void setLaunchOrder(int i)
 	{
 		launchOrder = i;
 	} // END setLaunchOrder() method
 	
+	/**
+	 * incrementLaunchOrder() -- Increments launchOrder
+	 * by 1. It is used to move the launchOrder from one
+	 * runway to another
+	 */
 	private static void incrementLaunchOrder()
 	{
 		launchOrder++;
 	} // END incrementLaunchOrder() method
 	
+	/**
+	 * getLaunchOrder() -- Returns the launchOrder variable
+	 * 
+	 * @return launchOrder
+	 */
 	private static int getLaunchOrder()
 	{
 		return launchOrder;
 	} // END getLaunchOrder() method
 	
+	/**
+	 * incrementFlightTakeOffCounter() -- This method 
+	 * increments the flightTakeOffCounter by 1. Used
+	 * when a plane is successfully launched.
+	 */
 	private static void incrementFlightTakeOffCounter()
 	{
 		flightTakeOffCounter++;
 	} // END incrementFlightTakeOffCounter() method
 	
+	/**
+	 * getFlightTakeOffCount() -- This method returns
+	 * the flightTakeOffCounter variable
+	 * 
+	 * @return flightTakeOffCounter
+	 */
 	private static int getFlightTakeOffCount()
 	{
 		return flightTakeOffCounter;
