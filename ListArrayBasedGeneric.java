@@ -114,4 +114,4 @@ public class ListArrayBasedGeneric<T> implements ListInterfaceGeneric<T>
 		
 		return arrayElements;
 	} // END toString() method
-}
+} // END CLASS ListArrayBasedGeneric {}
