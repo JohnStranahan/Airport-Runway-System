@@ -148,4 +148,4 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 		
 		return elements;
 	} // END toString() method
-}
+} // END CLASS AOSLArrayBased {}
