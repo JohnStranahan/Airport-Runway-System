@@ -9,10 +9,6 @@
  * @version 2017.4.12
  */
 
-/**
- * @author John
- *
- */
 public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 {
 	private String [] items;
@@ -29,7 +25,9 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 	} // END AOSLArrayBased() Constructor
 	
 	/**
-	 * 
+	 * isEmpty() -- Retuns a boolean if the array is
+	 * empty or not.
+	 *
 	 * @return true if numItems = 0
 	 */
 	public boolean isEmpty()
@@ -38,6 +36,8 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 	} // END isEmpty() method
 	
 	/**
+	 * size() -- This method returns the size variable
+	 *
 	 * @return numItems
 	 */
 	public int size()
@@ -46,7 +46,7 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 	} // END size() method
 	
 	/**
-	 * Resizes array to 1.5 the original array
+	 * Resizes array to 1.5 the original array and copies everything over
 	 */
 	private void resize()
 	{
@@ -63,7 +63,8 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 	} // END resize() method
 	
 	/**
-	 * Method gets the element at the given index
+	 * get() -- This method gets the element at the given index
+	 *
 	 * @param index
 	 * @throws ListIndexOutOfBoundsException
 	 */
@@ -80,7 +81,8 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 	} // END get() method
 	
 	/**
-	 * remove() Method removes element at the given index
+	 * remove() -- Method removes element at the given index
+	 *
 	 * @param index
 	 * @throws ListIndexOutOfBoundsException
 	 */
@@ -104,7 +106,8 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 	} // END remove() method
 	
 	/**
-	 * add() --Method adds String item at the given index
+	 * add() -- Method adds String item at the given index
+	 *
 	 * @param item
 	 * @throws ListIndexOutOfBoundsException
 	 */
@@ -138,7 +141,8 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 	} // END add() method
 	
 	/**
-	 * search() method uses binary search to get index of item
+	 * search() -- method uses binary search to get index of item
+	 *
 	 * @param item
 	 * @return int
 	 */
@@ -179,7 +183,8 @@ public class AOSLArrayBased implements AscendinglyOrderedStringListInterface
 	} // END clear() method
 	
 	/**
-	 * toString method to print elements of type AOSLArrayBased
+	 * toString() -- method to print elements of type AOSLArrayBased
+	 *
 	 * @return String
 	 */
 	public String toString()
