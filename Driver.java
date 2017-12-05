@@ -1,3 +1,13 @@
+/**
+ * Purpose: Data Structure and Algorithms Fall 2017 Final Project
+ * Status: Complete and throughly tested
+ * Last Update: 12/4/17
+ * Submitted: 12/5/17
+ * Comment: Test suite and sample run attached
+ * @author Tapan Soni
+ * @author John Stranahan
+ * @version 2017.4.12
+ */
 
 import java.io.*;
 
@@ -173,7 +183,7 @@ public class Driver
 			flightNumber = stdin.readLine().trim();
 			System.out.println(flightNumber);
 			searchReturn = planeSearch(flightNumber, listOfPlanes);
-		}
+		} // END WHILE
 
 		// Valid flight number, add it to the list to keep track of it's uniqueness for later
 		listOfPlanes.add(flightNumber);
@@ -197,7 +207,7 @@ public class Driver
 			System.out.println(runway);
 
 			searchReturn = search(runway, runwayList);
-		}
+		} // END WHILE
 
 		/**
 		 * If it gets to this point, searchReturn will be the index of the 
@@ -208,7 +218,7 @@ public class Driver
 		System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + runway);
 
 		System.out.println();
-	}
+	} // END addPlane() method
 	
 	public static void launchPlane(ListArrayBasedGeneric<Runway> runwayList, AOSLArrayBased listOfPlanes) throws IOException // Option # 2
 	{
@@ -278,7 +288,7 @@ public class Driver
 						else
 						{
 							incrementLaunchOrder();
-						}
+						} // END IF/ELSE
 						
 						// Increment flight counter
 						incrementFlightTakeOffCounter();
@@ -297,8 +307,8 @@ public class Driver
 						else
 						{
 							incrementLaunchOrder();
-						}
-					}
+						} // END IF/ELSE
+					} // END IF/ELSE
 					
 					readyToLaunch = true; // Quit after 1 iteration, whether the plane is launched or not
 				}
@@ -311,17 +321,17 @@ public class Driver
 					else // Launch order hasn't reached the end, increment it by 1
 					{
 						incrementLaunchOrder();
-					}
-				}
-			}
+					} // END IF/ELSE
+				} // END IF/ELSE
+			} // END WHILE
 		}
 		else
 		{
 			System.out.println("\tNo planes on any runway!");
-		}
+		} // END IF/ELSE
 		
 		System.out.println();
-	}
+	} // END launchPlane() method
 	
 
 	public static void reEnter(ListArrayBasedGeneric<Runway> runwayList) throws IOException // Option 3
@@ -357,22 +367,22 @@ public class Driver
 
 						// Add it to the original runway
 						runwayList.get(indexToAddAt).addPlane(runwayList.get(0).removeFromRunway(i));
-					}
-				}
+					} // END IF
+				} // END FOR
 
 				if(found == false) // If not found, then notify the user that the plane isn't waiting for clearance
 				{
 					System.out.println("\tFlight " + flightNumber + " is not waiting for clearance");
-				}
-			}
+				} // END IF
+			} // END WHILE
 		}
 		else
 		{
 			System.out.println("\tThere are no planes waiting for clearance");
-		}
+		} // END IF/ELSE
 
 		System.out.println();
-	}
+	} // END reEnter() method
 	
 	public static void openRunway(ListArrayBasedGeneric<Runway> runwayList) throws IOException // Option # 4
 	{
@@ -399,28 +409,17 @@ public class Driver
 
 			// Check for duplicates again
 			searchReturn = search(runwayName, runwayList);
-		}
+		} // END WHILE
 
 		if(searchReturn < 0)
 		{
 			System.out.println("\tRunway " + runwayName + " has opened\n");
-		}
+		} // END IF
 
 		// Add the new runway at the end
 		runwayList.add(size, new Runway(runwayName));
-	}
+	} // END openRunway() method
 	
-	/**
-	 * I Didn't set the new runway using setRunway() but it still works. 
-	 * I still want to test this
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param runwayList
-	 * @throws IOException
-	 */
 	public static void closeRunway(ListArrayBasedGeneric<Runway> runwayList) throws IOException // Option # 5
 	{
 		String runwayNameToDelete = "";
@@ -451,7 +450,7 @@ public class Driver
 				System.out.println(runwayNameToDelete);
 
 				searchReturn = search(runwayNameToDelete, runwayList);
-			}
+			} // END WHILE
 
 			// Searchreturn is the indexOf the runway, so set it to a value --> indexOfTheRunwayToDelete
 			sizeOfRunwayToDelete = runwayList.get(searchReturn).getListOfPlanes().size();
@@ -480,7 +479,7 @@ public class Driver
 					else // If the runway isn't in the list
 					{
 						System.out.println("\tNo such runway!");
-					}
+					} // END IF/ELSE
 
 					// Get the input again
 					System.out.print("\tEnter a new runway for plane " + flightNumber + ": ");
@@ -489,7 +488,7 @@ public class Driver
 
 					// Check if the new runway is valid
 					searchReturn = search(newRunwayForPlanes, runwayList);
-				}
+				} // END WHILE
 
 				// Remove the plane from runway to delete and add it to the new runway
 				// searchReturn is the new runway's index so just use that
@@ -499,7 +498,7 @@ public class Driver
 
 				// Echo it out
 				System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + newRunwayForPlanes);
-			}
+			} // END FOR
 
 			// Go through purgatory, get the size of purgatory
 			sizeOfPurgatory = runwayList.get(0).getListOfPlanes().size();
@@ -534,7 +533,7 @@ public class Driver
 						else // If the runway isn't in the list
 						{
 							System.out.println("\tNo such runway!");
-						}
+						} // END IF/ELSE
 
 						// Get the input again
 						System.out.print("\tEnter a new runway for plane " + flightNumber + ": ");
@@ -543,7 +542,7 @@ public class Driver
 
 						// Check if the new runway is valid
 						searchReturn = search(newRunwayForPlanes, runwayList);
-					}
+					} // END WHILE
 
 					// Remove the plane from runway to delete and add it to the new runway
 					// searchReturn is the new runway's index so just use that
@@ -555,8 +554,8 @@ public class Driver
 					
 					// Echo it out
 					System.out.println("\tFlight " + flightNumber + " is now waiting for takeoff on runway " + newRunwayForPlanes);
-				}
-			}
+				} // END IF
+			} // END FOR
 
 			// Delete the runway element from the runwayList
 			runwayList.remove(indexOfTheRunwayToDelete);
