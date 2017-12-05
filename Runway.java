@@ -16,7 +16,8 @@ public class Runway
 	ListArrayBasedGeneric<Plane> arrayOfPlanes = new ListArrayBasedGeneric<Plane>();
 	
 	/**
-	 * Runway() constructor method
+	 * Runway() -- constructor method
+	 *
 	 * @param runwayName
 	 */
 	public Runway(String runwayName)
@@ -24,7 +25,8 @@ public class Runway
 		this.runwayName = runwayName;
 	} // END Runway() Constructor
 	/**
-	 * addPlane() method creates a newPlane and add's it to the end of arrayOfPlanes
+	 * addPlane() method creates a newPlane and add's it to the end of 
+	 
 	 * @param flightNumber
 	 * @param destination
 	 * @param runway
@@ -43,8 +45,10 @@ public class Runway
 		 */
 		arrayOfPlanes.add(size, newPlane);
 	} // END addPlane() method
+	
 	/**
-	 * addPlane() method add's a plane object to end of the arrayOfPlanes
+	 * addPlane() -- method add's a plane object to end of the arrayOfPlanes
+	 *
 	 * @param plane
 	 */
 	public void addPlane(Plane plane)
@@ -52,8 +56,9 @@ public class Runway
 		int size = arrayOfPlanes.size();
 		arrayOfPlanes.add(size, plane);
 	}// END addPlane() method	
+	
 	/**
-	 * takeoff() removes the object at the first index of arrayOfPlanes
+	 * takeoff() -- removes the object at the first index of arrayOfPlanes
 	 */
 	public void takeOff()
 	{
@@ -61,8 +66,10 @@ public class Runway
 	} // END takeOff() method
 	
 	/**
-	 * removeFromRunway() creates plane object that reerences the arrayofPlanes element at the given index and removes the item 
+	 * removeFromRunway() -- creates plane object that reerences the arrayofPlanes element
+	 * at the given index and removes the item 
 	 * at that index and returns the removed element
+	 *
 	 * @param index
 	 * @return temp
 	 */
@@ -74,32 +81,40 @@ public class Runway
 		
 		return temp;
 	} // END removeFromRunway() method
+	
 	/**
-	 * getListOfPlanes() accessor method
+	 * getListOfPlanes() -- accessor method
+	 *
 	 * @return arrayOfPlanes
 	 */
 	public ListArrayBasedGeneric<Plane> getListOfPlanes()
 	{
 		return arrayOfPlanes;
 	} // END getListOfPlanes() method
+	
 	/**
-	 * setRunwayName() mutator method
+	 * setRunwayName() -- mutator method
+	 *
 	 * @param runwayName
 	 */
 	public void setRunwayName(String runwayName)
 	{
 		this.runwayName = runwayName;
 	} // END setRunwayName() method
+	
 	/**
-	 * getRunwayName() accessor method
+	 * getRunwayName() -- accessor method
+	 *
 	 * @return runwayName
 	 */
 	public String getRunwayName()
 	{
 		return runwayName;
 	} // END getRunwayName() method
+	
 	/**
-	 * Returns a string representation of the object
+	 * toString() -- Returns a string representation of the object
+	 *
 	 * @return String
 	 */
 	@Override
