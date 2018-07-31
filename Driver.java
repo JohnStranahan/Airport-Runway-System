@@ -32,8 +32,17 @@ public class Driver
 		System.out.println("Welcome to the Airport program!");
 		System.out.print("Enter the number of runways: ");
 		numberOfRunways = Integer.parseInt(stdin.readLine().trim());
-		System.out.println(numberOfRunways);
+		System.out.println("\t" + numberOfRunways + " runway(s) are present");
+		System.out.println("");
 
+		
+		while(numberOfRunways <= 0)
+		{
+			System.out.println("Please Enter a positive number of runways");
+			numberOfRunways = Integer.parseInt(stdin.readLine().trim());
+		}
+		
+		
 
 		/**
 		 * Input the runway names, and make sure that they
@@ -44,7 +53,7 @@ public class Driver
 			String runwayName = "";
 			int searchResult = 0;
 
-			System.out.print("Enter the name of runway number: " + (i + 1) + ": ");
+			System.out.print("Enter the name of runway number " + (i + 1) + ": ");
 			runwayName = stdin.readLine().trim();
 			System.out.println(runwayName);
 
@@ -698,7 +707,7 @@ public class Driver
 	{
 		int numOfPlanesTakenOff = getFlightTakeOffCount();
 		
-		System.out.println("\t" + numOfPlanesTakenOff + " planes have taken off from the airport");
+		System.out.println("\t" + numOfPlanesTakenOff + " plane(s) have taken off from the airport");
 		
 		System.out.println();
 	} // END displayNumOfPlanesTakenOff() method
